@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ShopNest - Your Grocery Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0; background: #f8f9fa; /* Lighter background */
+    color: #343a40; /* Darker text color */
+    line-height: 1.6; /* Improved readability */
+  }
+  header {
+    background: #28a745; /* Vibrant green */
+    color: white; padding: 20px 30px;
+    text-align: center; font-weight: 700; font-size: 2.2rem; /* Slightly larger font */
+    letter-spacing: 0.5px; /* Reduced letter spacing */
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3); /* Updated shadow color */
+    overflow: hidden; /* Hide overflow for animation */
+    position: relative; /* Needed for absolute positioning if used later */
+  }
+
+  .header-content {
+      display: inline-block; /* Change to inline-block */
+      white-space: nowrap; /* Prevent text wrapping */
+      animation: scroll-header 15s linear infinite; /* CSS animation for scrolling */
+  }
+
+  @keyframes scroll-header {
+      0% { transform: translateX(100%); } /* Start off-screen to the right */
+      100% { transform: translateX(-100%); } /* End off-screen to the left */
+  }
+
+  /* Style for Sale Banner */
+  .sale-banner {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #ff0000; /* Red color for sale */
+      animation: blinker 1s linear infinite; /* Blinking animation */
+      margin: 0 10px; /* Add margin around the banner */
+  }
+
+  @keyframes blinker {
+      50% { opacity: 0; }
+  }
+
+  .search-and-sale {
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Center the content horizontally */
+      margin: 20px auto; /* Center the container */
+      max-width: 800px; /* Limit the width */
+      padding: 0 20px; /* Add padding on smaller screens */
+  }
+
+
+  main {
+    display: flex; max-width: 1200px; margin: 30px auto; /* Increased margin */
+    gap: 40px; /* Increased gap */
+    padding: 0 20px;
+    /* Added border to main for debugging */
+    border: 2px dashed green;
+  }
+  .products {
+    flex: 3; display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px; /* Increased gap */
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    /* Added border to products for debugging */
+    border: 2px dashed red;
+    min-height: 200px; /* Ensure minimum height */
+  }
+  .product-card {
+    background: white; border-radius: 12px; /* Slightly less rounded */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08); /* Softer shadow */
+    padding: 20px;
+    display: flex; flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #e9ecef; /* Subtle border */
+    /* Removed temporary styling for visibility */
+    border: 1px solid #e9ecef;
+  }
+  .product-card:hover {
+    transform: translateY(-5px); /* Slightly smaller lift */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* More pronounced shadow on hover */
+  }
+  .product-card img {
+    display: none; /* Hide images */
+  }
+  .product-info { margin-top: 0; flex-grow: 1; }
+  .product-name {
+    font-weight: 600; font-size: 1.3rem; /* Slightly larger font */
+    margin-bottom: 10px; /* Increased margin */
+    color: #007bff; /* Blue name color */
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  .product-name:hover {
+      text-decoration: underline;
+      color: #0056b3;
+  }
+  .product-description { /* New style for description */
+      font-size: 0.9rem;
+      color: #6c757d; /* Grey color */
+      margin-bottom: 15px; /* Space below description */
+      overflow: hidden; /* Hide overflow text */
+      text-overflow: ellipsis; /* Add ellipsis */
+      display: -webkit-box;
+      -webkit-line-clamp: 2; /* Limit to 2 lines */
+      -webkit-box-orient: vertical;
+  }
+  .product-price {
+    font-weight: 700; color: #dc3545; /* Red price color */
+    font-size: 1.4rem; /* Larger price font */
+    margin-bottom: 15px; /* Increased margin */
+  }
+  .quantity-container {
+    display: flex; align-items: center; margin-bottom: 15px;
+  }
+  .quantity-container input[type="number"] {
+    width: 60px; /* Slightly narrower input */
+    padding: 8px 10px;
+    font-size: 1rem;
+    border-radius: 6px; /* Slightly less rounded */
+    border: 1px solid #ced4da; /* Lighter border color */
+    text-align: center;
+    -moz-appearance: textfield;
+  }
+  input::-webkit-inner-spin-button,
+  input::-webkit-outer-spin-button {
+    -webkit-appearance: none; margin: 0;
+  }
+  button.add-cart-btn {
+    background: #28a745; /* Green add button */
+    color: white; border: none;
+    padding: 10px 18px; /* Adjusted padding */
+    font-weight: 600; border-radius: 6px; /* Slightly less rounded */
+    cursor: pointer; transition: background-color 0.3s ease;
+    font-size: 1rem;
+    margin-left: auto; /* Push button to the right */
+  }
+  button.add-cart-btn:hover {
+    background: #218838; /* Darker green on hover */
+  }
+  aside.cart {
+    flex: 1; background: white; border-radius: 12px; /* Slightly less rounded */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08); /* Softer shadow */
+    padding: 20px;
+    max-height: 80vh;
+    display: flex; flex-direction: column;
+    border: 1px solid #e9ecef; /* Subtle border */
+  }
+  aside.cart h2 {
+    margin-bottom: 20px;
+    color: #343a40; /* Darker heading color */
+    font-size: 1.6rem; /* Slightly larger heading font */
+    border-bottom: 2px solid #007bff; /* Blue border */
+    padding-bottom: 10px;
+  }
+  .cart-items {
+    flex-grow: 1; overflow-y: auto; margin-bottom: 20px;
+  }
+  .cart-item {
+    display: flex; justify-content: space-between;
+    margin-bottom: 15px;
+    align-items: center;
+    border-bottom: 1px solid #dee2e6; /* Lighter border */
+    padding-bottom: 10px;
+  }
+  .cart-item-name {
+    font-weight: 400; /* Lighter font weight */
+    flex: 1; margin-right: 15px; /* Increased margin */
+    color: #495057;
+  }
+  .cart-item-qty {
+    margin: 0 10px; color: #6c757d; /* Grey color */
+    font-size: 0.9rem;
+  }
+  .cart-item-price {
+    font-weight: 700; color: #dc3545; /* Red price color */
+    font-size: 1.1rem;
+  }
+  .cart-total {
+    font-weight: 700; font-size: 1.6rem; /* Larger total font */
+    border-top: 2px solid #007bff; /* Blue border */
+    padding-top: 15px;
+    margin-bottom: 20px;
+    text-align: right;
+    color: #343a40;
+  }
+  button.purchase-btn {
+    background: #ffc107; /* Yellow purchase button */
+    border: none; color: #212529;
+    padding: 12px 20px;
+    font-weight: 700; font-size: 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(255, 193, 7, 0.4);
+    transition: background-color 0.3s ease;
+    width: 100%;
+  }
+  button.purchase-btn:hover {
+    background: #e0a800; /* Darker yellow on hover */
+  }
+  button.purchase-btn:disabled {
+    background: #e9ecef; /* Lighter grey when disabled */
+    color: #6c757d;
+    cursor: not-allowed;
+  }
+  .modal-bg {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background-color: rgba(0,0,0,0.6);
+    display: none; justify-content: center; align-items: center;
+    z-index: 200;
+  }
+  .modal-content {
+    background: white; border-radius: 12px;
+    max-width: 500px;
+    width: 90%; padding: 30px;
+    position: relative; box-shadow: 8px 25px rgba(0, 0, 0, 0.4);
+  }
+  .modal-close {
+    position: absolute; top: 15px; right: 20px;
+    font-size: 2rem;
+    font-weight: 700; color: #adb5bd; /* Lighter color */
+    cursor: pointer; user-select: none;
+  }
+  .modal-close:hover {
+    color: #dc3545; /* Red on hover */
+  }
+  .modal-image {
+    width: 100%; height: 280px;
+    object-fit: cover;
+    border-radius: 8px; /* Slightly less rounded */
+    margin-bottom: 20px;
+    display: none; /* Keep image hidden */
+  }
+  .modal-name {
+    font-size: 1.8rem;
+    font-weight: 700; margin-bottom: 12px;
+    color: #343a40;
+  }
+  .modal-desc {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    color: #555;
+    line-height: 1.5;
+  }
+  .modal-price {
+    font-size: 1.6rem;
+    font-weight: 700; color: #dc3545;
+    margin-bottom: 20px;
+  }
+  .modal-quantity {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+  }
+   .modal-quantity input[type="number"] {
+     width: 70px; /* Wider input */
+    padding: 8px 12px;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    text-align: center;
+    -moz-appearance: textfield;
+    margin-left: 10px;
+  }
+  .modal-add-btn {
+    background: #28a745; /* Green add button */
+    color: white; padding: 12px 20px;
+    border: none; border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer; width: 100%; transition: background-color 0.3s ease;
+    font-size: 1.2rem;
+  }
+  .modal-add-btn:hover {
+    background: #218838; /* Darker green on hover */
+  }
+
+  /* Style for Search Bar */
+  .search-container {
+      flex-grow: 1; /* Allow search bar to take available space */
+      margin: 0 10px; /* Add margin around search bar */
+  }
+
+  #search-bar {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 1.1rem;
+      border: 1px solid #ced4da;
+      border-radius: 25px; /* Rounded corners */
+      outline: none; /* Remove default outline */
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  #search-bar:focus {
+      border-color: #007bff; /* Highlight on focus */
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+  }
+
+
+  @media (max-width: 900px) {
+    main {
+      flex-direction: column; padding: 10px;
+      gap: 20px; /* Smaller gap on smaller screens */
+    }
+    aside.cart {
+      max-height: none; margin-top: 0; /* Removed margin-top */
+    }
+    .products {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px; /* Smaller gap on smaller screens */
+    }
+    aside.cart h2 {
+        margin-bottom: 15px;
+    }
+    .cart-items {
+        margin-bottom: 15px;
+    }
+    .cart-item {
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+    }
+    .cart-total {
+        padding-top: 10px;
+        margin-bottom: 15px;
+        font-size: 1.4rem;
+    }
+    .modal-content {
+        padding: 20px;
+    }
+    .modal-name {
+        font-size: 1.5rem;
+    }
+    .modal-price {
+        font-size: 1.4rem;
+    }
+    .search-and-sale {
+        flex-direction: column; /* Stack elements vertically on smaller screens */
+        align-items: stretch; /* Stretch items to fill width */
+        margin: 10px auto; /* Adjust margin for smaller screens */
+    }
+    .sale-banner {
+        margin: 5px 0; /* Adjust margin for stacked layout */
+        text-align: center; /* Center the banner text */
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="header-content">
+        ShopNest - Your Grocery Store
+    </div>
+</header>
+
+<div class="search-and-sale">
+    <div class="sale-banner">
+        *** SALE SALE ***
+    </div>
+    <div class="search-container">
+        <input type="text" id="search-bar" placeholder="Search products...">
+    </div>
+     <div class="sale-banner">
+        *** SALE SALE ***
+    </div>
+</div>
+
+
+<main>
+  <section class="products" id="products">
+      <!-- Indicator for products section -->
+      <p style="text-align: center; color: #555;">Attempting to load products below...</p>
+
+  </section>
+
+  <aside class="cart">
+    <h2>Shopping Cart</h2>
+    <div class="cart-items" id="cart-items">
+      <p>Your cart is empty.</p>
+    </div>
+    <div class="cart-total" id="cart-total">Total: $0.00</div>
+    <button class="purchase-btn" id="purchase-btn" disabled>Purchase</button>
+  </aside>
+</main>
+
+<!-- Product Modal -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-name">
+    <div class="modal-close" id="modal-close">&times;</div>
+    <img src="" alt="" class="modal-image" id="modal-image" />
+    <div class="modal-name" id="modal-name"></div>
+    <div class="modal-desc" id="modal-desc"></div>
+    <div class="modal-price" id="modal-price"></div>
+    <div class="modal-quantity">
+      Quantity: <input type="number" id="modal-qty" min="1" max="99" value="1" />
+    </div>
+    <button class="modal-add-btn" id="modal-add-btn">Add to Cart</button>
+  </div>
+</div>
+
+<script>
+  const products = [
+    { id: 1, name: "Fresh Tomatoes", price: 3.99, img: "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=400&q=80", description: "Juicy and ripe fresh tomatoes, perfect for salads and cooking." },
+    { id: 2, name: "Organic Bananas", price: 1.29, img: "https://images.unsplash.com/photo-1574226516831-e1dff420e7c8?auto=format&fit=crop&w=400&q=80", description: "Sweet and healthy organic bananas packed with nutrients." },
+    { id: 3, name: "Bottle of Olive Oil", price: 12.99, img: "https://images.unsplash.com/photo-1542831371-d531d36971e6?auto=format&fit=crop&w=400&q=80", description: "Premium extra virgin olive oil from the Mediterranean." },
+    { id: 4, name: "Fresh Carrots", price: 2.49, img: "https://images.unsplash.com/photo-1596027993649-a355912d73f8?auto=format&fit=crop&w=400&q=80", description: "Crunchy fresh carrots, great for snacking and cooking." },
+    { id: 5, name: "Honey Jar", price: 7.49, img: "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=400&q=80", description: "Natural and sweet honey from organic beekeepers." },
+    { id: 6, name: "Fresh Lettuce", price: 1.99, img: "https://images.unsplash.com/photo-1567306226416-3b8f3a7207e7?auto=format&fit=crop&w=400&q=80", description: "Crisp fresh lettuce, perfect for healthy salads." },
+    { id: 7, name: "Almond Milk", price: 3.19, img: "https://images.unsplash.com/photo-1585421514283-efb00e3f2f15?auto=format&fit=crop&w=400&q=80", description: "Delicious and dairy-free almond milk for your daily needs." },
+    { id: 8, name: "Brown Bread", price: 2.79, img: "https://images.unsplash.com/photo-1542831371-5d792fefb2fc?auto=format&fit=crop&w=400&q=80", description: "Freshly baked brown bread, rich in fiber and taste." },
+    { id: 9, name: "Cucumber", price: 1.49, img: "https://images.unsplash.com/photo-1506806732259-39c2d0268443?auto=format&fit=crop&w=400&q=80", description: "Cool and refreshing cucumbers, great for salads and sandwiches." },
+    { id: 10, name: "Orange Juice Bottle", price: 4.99, img: "https://images.unsplash.com/photo-1574226516831-cb1d4a74c01e?auto=format&fit=crop&w=400&q=80", description: "Freshly squeezed orange juice, packed with vitamin C." },
+    { id: 11, name: "Running Shoes", price: 59.99, img: "https://images.unsplash.com/photo-1542291026-7eec264c6780?auto=format&fit=crop&w=400&q=80", description: "Comfortable and durable running shoes for your active lifestyle." },
+    { id: 12, name: "Bottled Water (Pack of 6)", price: 3.49, img: "https://images.unsplash.com/photo-1625078703458-321098567732?auto=format&fit=crop&w=400&q=80", description: "Convenient pack of 6 bottles of pure drinking water." },
+    { id: 13, name: "Wooden Storage Crate", price: 24.99, img: "https://images.unsplash.com/photo-1615972495586-09612d7b9f14?auto=format&fit=crop&w=400&q=80", description: "Rustic wooden crate for storage or decoration." },
+    { id: 14, name: "Broccoli", price: 2.99, img: "https://images.unsplash.com/photo-1586510292583-1d48e9528d72?auto=format&fit=crop&w=400&q=80", description: "Fresh and healthy broccoli florets." },
+    { id: 15, name: "Bell Peppers (Mixed)", price: 3.49, img: "https://images.unsplash.com/photo-1529854140015-cb718e833372?auto=format&fit=crop&w=400&q=80", description: "Assorted colorful bell peppers." },
+    { id: 16, name: "Spinach (Bagged)", price: 2.79, img: "https://images.unsplash.com/photo-1552544159-d9ee2f7a3d8b?auto=format&fit=crop&w=400&q=80", description: "Fresh, pre-washed spinach." },
+    { id: 17, name: "Onions (Yellow)", price: 1.99, img: "https://images.unsplash.com/photo-1585421514283-ff83a83e1f74?auto=format&fit=crop&w=400&q=80", description: "Versatile yellow onions." },
+    { id: 18, name: "Potatoes (Russet)", price: 3.79, img: "https://images.unsplash.com/photo-1518977676588-ac7c09a1430a?auto=format&fit=crop&w=400&q=80", description: "Classic russet potatoes, perfect for baking." }
+
+  ];
+
+  const productsContainer = document.getElementById("products");
+  const cartItemsContainer = document.getElementById("cart-items");
+  const cartTotalEl = document.getElementById("cart-total");
+  const purchaseBtn = document.getElementById("purchase-btn");
+  const searchBar = document.getElementById("search-bar"); // Get search bar element
+
+  const modalBg = document.getElementById("modal-bg");
+  const modalClose = document.getElementById("modal-close");
+  const modalImage = document.getElementById("modal-image");
+  modalImage.style.display = "none"; // Hide image in modal
+  const modalName = document.getElementById("modal-name");
+  const modalDesc = document.getElementById("modal-desc");
+  const modalPrice = document.getElementById("modal-price");
+  const modalQty = document.getElementById("modal-qty");
+  const modalAddBtn = document.getElementById("modal-add-btn");
+
+  let cart = [];
+  let currentProduct = null;
+
+  function formatPrice(price) {
+    return "$" + price.toFixed(2);
+  }
+
+  function renderProducts(productsToRender = products) { // Accept optional products array
+    console.log("Rendering products:", productsToRender.length); // Log how many products are being rendered
+    productsContainer.innerHTML = "";
+    if (productsToRender.length === 0) {
+        productsContainer.innerHTML = "<p style='text-align: center; color: #555;'>No products found.</p>";
+    } else {
+        productsToRender.forEach(product => { // Use the provided array
+          const card = document.createElement("div");
+          card.className = "product-card";
+          console.log("Created product card for:", product.name); // Log when a card is created
+
+          const info = document.createElement("div");
+          info.className = "product-info";
+          info.style.flexGrow = "1";
+
+          const name = document.createElement("div");
+          name.className = "product-name";
+          name.textContent = product.name;
+          name.style.cursor = "pointer";
+          name.addEventListener("click", () => openModal(product));
+
+          const description = document.createElement("div");
+          description.className = "product-description";
+          description.textContent = product.description;
+
+
+          const price = document.createElement("div");
+          price.className = "product-price";
+          price.textContent = formatPrice(product.price);
+
+          const qtyContainer = document.createElement("div");
+          qtyContainer.className = "quantity-container";
+          const qtyInput = document.createElement("input");
+          qtyInput.type = "number";
+          qtyInput.min = "1";
+          qtyInput.value = 1;
+          qtyInput.addEventListener("input", () => {
+        if (qtyInput.value < 1) qtyInput.value = 1;
+        if (qtyInput.value > 99) qtyInput.value = 99;
+          });
+          qtyContainer.appendChild(qtyInput);
+
+          const addBtn = document.createElement("button");
+          addBtn.className = "add-cart-btn";
+          addBtn.textContent = "Add to Cart";
+          addBtn.addEventListener("click", () => {
+            addToCart(product.id, parseInt(qtyInput.value));
+            qtyInput.value = 1;
+          });
+
+          info.appendChild(name);
+          info.appendChild(description);
+          info.appendChild(price);
+          info.appendChild(qtyContainer);
+          info.appendChild(addBtn);
+
+          card.appendChild(info);
+          productsContainer.appendChild(card);
+          console.log("Appended card for:", product.name); // Log when a card is appended
+        });
+    }
+     console.log("Finished rendering products."); // Log when rendering is complete
+  }
+
+  function openModal(product) {
+    currentProduct = product;
+    modalImage.alt = product.name;
+    modalName.textContent = product.name;
+    modalDesc.textContent = product.description;
+    modalPrice.textContent = formatPrice(product.price);
+    modalQty.value = 1;
+    modalBg.style.display = "flex";
+  }
+
+  function closeModal() {
+    modalBg.style.display = "none";
+  }
+
+  modalClose.addEventListener("click", closeModal);
+  modalBg.addEventListener("click", (e) => {
+    if (e.target === modalBg) closeModal();
+  });
+
+  modalAddBtn.addEventListener("click", () => {
+    addToCart(currentProduct.id, parseInt(modalQty.value));
+    closeModal();
+  });
+
+  function addToCart(productId, quantity) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+
+    const existingItemIndex = cart.findIndex(item => item.id === productId);
+
+    if (existingItemIndex > -1) {
+      cart[existingItemIndex].quantity += quantity;
+    } else {
+      cart.push({ ...product, quantity });
+    }
+
+    renderCart();
+  }
+
+  function renderCart() {
+    cartItemsContainer.innerHTML = "";
+    let total = 0;
+
+    if (cart.length === 0) {
+      cartItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
+      purchaseBtn.disabled = true;
+    } else {
+      cart.forEach(item => {
+        const cartItemEl = document.createElement("div");
+        cartItemEl.className = "cart-item";
+
+        const nameEl = document.createElement("span");
+        nameEl.className = "cart-item-name";
+        nameEl.textContent = item.name;
+
+        const qtyEl = document.createElement("span");
+        qtyEl.className = "cart-item-qty";
+        qtyEl.textContent = `x${item.quantity}`;
+
+        const priceEl = document.createElement("span");
+        priceEl.className = "cart-item-price";
+        priceEl.textContent = formatPrice(item.price * item.quantity);
+
+        cartItemEl.appendChild(nameEl);
+        cartItemEl.appendChild(qtyEl);
+        cartItemEl.appendChild(priceEl);
+
+        cartItemsContainer.appendChild(cartItemEl);
+
+        total += item.price * item.quantity;
+      });
+      purchaseBtn.disabled = false;
+    }
+
+    cartTotalEl.textContent = `Total: ${formatPrice(total)}`;
+  }
+
+  // Add event listener to the purchase button
+  purchaseBtn.addEventListener("click", () => {
+    if (cart.length > 0) {
+      const shippingAddress = prompt("Please enter your shipping address:"); // Prompt for address
+      if (shippingAddress !== null && shippingAddress.trim() !== "") { // Check if address is entered
+          alert("Thank you for your purchase! Your order has been placed and will be shipped to:\n" + shippingAddress); // Simple confirmation message with address
+          cart = []; // Clear the cart after purchase
+          renderCart(); // Re-render the cart to show it's empty
+      } else {
+          alert("Please enter a valid shipping address to place your order."); // Message if address is not entered
+      }
+    } else {
+      alert("Your cart is empty. Please add items before purchasing."); // Message if cart is empty
+    }
+  });
+
+
+  // Add event listener for the search bar
+  searchBar.addEventListener("input", (e) => {
+      const searchTerm = e.target.value.toLowerCase(); // Get search query
+
+      const filteredProducts = products.filter(product =>
+          product.name.toLowerCase().includes(searchTerm) ||
+          product.description.toLowerCase().includes(searchTerm) // Filter by name or description
+      );
+
+      renderProducts(filteredProducts); // Render filtered products
+  });
+
+
+  renderProducts();
+  renderCart();
+</script>
+</body>
+</html>
+Thank you
