@@ -32,7 +32,7 @@ Welcome to **ShopNest**, a responsive and interactive grocery e-commerce web app
 ## 📸 Demo
 
 Click here to try it live:  
-➡️ http://127.0.0.1:5500/index.html
+➡️ https://polojusriman.github.io/ShopNest---Your-Grocery-Store/
 
 ---
 
